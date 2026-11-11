@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A responsive college admission portal demo built with HTML, CSS and JavaScript." />
+  <title>UniApply — College Admission Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="UniApply home">
+        <span class="brand-mark">U</span>
+        <span><b>UniApply</b><small>ADMISSION PORTAL</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-icon">▦</span> Dashboard</button>
+        <button class="nav-item" data-view="applications"><span class="nav-icon">▤</span> Applications <span class="nav-count" id="navApplicationCount">0</span></button>
+        <button class="nav-item" data-view="new-application"><span class="nav-icon">＋</span> New application</button>
+        <button class="nav-item" data-view="merit"><span class="nav-icon">✧</span> Merit list</button>
+        <button class="nav-item" data-view="reports"><span class="nav-icon">▥</span> Reports</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card">
+          <div class="help-icon">?</div>
+          <b>Need a hand?</b>
+          <p>Use the demo data to explore the portal.</p>
+          <button class="text-button" id="helpBtn">View quick guide →</button>
+        </div>
+        <div class="profile-mini">
+          <div class="avatar" id="profileAvatar">AD</div>
+          <div class="profile-copy"><b id="profileName">Admin User</b><small id="profileRole">Administrator</small></div>
+          <button class="icon-button" id="logoutBtn" title="Switch user" aria-label="Switch user">↪</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu icon-button" id="mobileMenu" aria-label="Open menu">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <b id="breadcrumbCurrent">Dashboard</b></div>
+        <div class="top-actions">
+          <span class="today-label" id="todayLabel"></span>
+          <button class="icon-button notification-button" title="Notifications" aria-label="Notifications">♧<i></i></button>
+          <button class="top-avatar" id="topAvatar" title="Current user">AD</button>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="view active" id="view-dashboard">
+          <div class="page-heading">
+            <div><p class="eyebrow">OVERVIEW</p><h1>Good day, <span id="welcomeName">Admin</span> <span class="wave">✦</span></h1><p class="muted">Here’s what’s happening with admissions today.</p></div>
+            <button class="primary-button" data-go="new-application">＋ Create application</button>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span>Total applications</span><span class="stat-icon purple">▤</span></div><strong id="statTotal">0</strong><small class="stat-foot"><span class="positive">● Live</span> applications in portal</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Approved</span><span class="stat-icon green">✓</span></div><strong id="statApproved">0</strong><small class="stat-foot">Ready for next steps</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Pending review</span><span class="stat-icon amber">◷</span></div><strong id="statPending">0</strong><small class="stat-foot">Awaiting decision</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Rejected</span><span class="stat-icon red">×</span></div><strong id="statRejected">0</strong><small class="stat-foot">Reviewed applications</small></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel chart-panel">
+              <div class="panel-heading"><div><h2>Application overview</h2><p class="muted">Current admission cycle</p></div><span class="soft-tag">All courses</span></div>
+              <div class="chart-area"><div class="chart-y"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div><div class="bar-chart" id="overviewChart"><div class="chart-empty">Applications will appear here.</div></div></div>
+              <div class="chart-legend"><span><i class="legend-dot dot-purple"></i> Applications</span><span><i class="legend-dot dot-green"></i> Approved</span></div>
+            </article>
+            <article class="panel course-panel">
+              <div class="panel-heading"><div><h2>Popular courses</h2><p class="muted">Applications by programme</p></div><span class="panel-more">•••</span></div>
+              <div id="courseBreakdown" class="course-breakdown"></div>
+            </article>
+          </div>
+          <article class="panel recent-panel">
+            <div class="panel-heading"><div><h2>Recent applications</h2><p class="muted">Latest student submissions</p></div><button class="text-button" data-go="applications">View all →</button></div>
+            <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>APPLICATION ID</th><th>COURSE</th><th>DATE</th><th>STATUS</th><th></th></tr></thead><tbody id="recentTable"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-applications">
+          <div class="page-heading"><div><p class="eyebrow">STUDENT RECORDS</p><h1>Applications</h1><p class="muted">Review, search and manage submitted applications.</p></div><button class="primary-button" data-go="new-application">＋ New application</button></div>
+          <div class="panel list-panel">
+            <div class="toolbar"><div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search name, ID or email..." /></div><select id="statusFilter" aria-label="Filter by status"><option value="All">All statuses</option><option>Pending</option><option>Approved</option><option>Rejected</option></select><select id="courseFilter" aria-label="Filter by course"><option value="All">All courses</option></select><button class="outline-button" id="exportCsv">↓ Export CSV</button></div>
+            <div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>APPLICATION ID</th><th>COURSE</th><th>12TH %</th><th>SUBMITTED</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="applicationsTable"></tbody></table></div>
+            <div class="table-footer"><span id="tableCount">Showing 0 applications</span><span>Demo data is saved in this browser</span></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-new-application">
+          <div class="page-heading"><div><p class="eyebrow">ADMISSION 2026–27</p><h1>New application</h1><p class="muted">Enter student details to create an admission application.</p></div><span class="step-pill">STEP 01 <i>/</i> APPLICATION</span></div>
+          <form id="applicationForm" class="application-layout">
+            <div class="form-main">
+              <article class="panel form-panel">
+                <div class="form-section-title"><span class="section-number">01</span><div><h2>Personal information</h2><p class="muted">Basic details of the applicant.</p></div></div>
+                <div class="form-grid">
+                  <label>Full name <em>*</em><input name="name" required placeholder="e.g. Aditi Sharma" /></label>
+                  <label>Email address <em>*</em><input name="email" type="email" required placeholder="student@example.com" /></label>
+                  <label>Phone number <em>*</em><input name="phone" type="tel" pattern="[0-9+\-\s]{10,15}" required placeholder="+91 98765 43210" /></label>
+                  <label>Date of birth <em>*</em><input name="dob" type="date" required /></label>
+                  <label>Gender<select name="gender"><option value="">Select gender</option><option>Female</option><option>Male</option><option>Other</option><option>Prefer not to say</option></select></label>
+                  <label>Category<select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option></select></label>
+                  <label class="full">Address<textarea name="address" rows="2" placeholder="House number, street, city, state and PIN code"></textarea></label>
+                </div>
+              </article>
+              <article class="panel form-panel">
+                <div class="form-section-title"><span class="section-number">02</span><div><h2>Academic information</h2><p class="muted">Previous education and programme selection.</p></div></div>
+                <div class="form-grid">
+                  <label>Programme / course <em>*</em><select name="course" required><option value="">Choose a course</option><option>B.Tech Computer Science</option><option>B.Tech Information Technology</option><option>BBA</option><option>BCA</option><option>MBA</option><option>MCA</option><option>B.Com</option><option>BA English</option></select></label>
+                  <label>12th board<input name="board" placeholder="e.g. CBSE / State Board" /></label>
+                  <label>12th passing year<input name="passingYear" type="number" min="2000" max="2035" placeholder="2026" /></label>
+                  <label>12th percentage (%) <em>*</em><input name="percentage" type="number" min="0" max="100" step="0.01" required placeholder="e.g. 86.5" /></label>
+                  <label>Entrance exam<input name="entrance" placeholder="e.g. JEE Main / CUET / N/A" /></label>
+                  <label>Entrance score<input name="entranceScore" type="number" min="0" max="1000" placeholder="Optional" /></label>
+                </div>
+              </article>
+              <article class="panel form-panel">
+                <div class="form-section-title"><span class="section-number">03</span><div><h2>Supporting documents</h2><p class="muted">Attach documents for this demo application.</p></div></div>
+                <div class="upload-grid">
+                  <label class="upload-box"><span class="upload-symbol">↑</span><b>Student photograph</b><small>JPG or PNG · max 1 MB</small><input type="file" name="photo" accept="image/png,image/jpeg" /></label>
+                  <label class="upload-box"><span class="upload-symbol">↑</span><b>Marksheet / certificate</b><small>PDF, JPG or PNG · max 1 MB</small><input type="file" name="marksheet" accept=".pdf,image/png,image/jpeg" /></label>
+                </div>
+                <p class="form-note">For this front-end demo, only small file details are stored in your browser. Do not upload sensitive real documents.</p>
+              </article>
+              <div class="form-actions"><button type="button" class="outline-button" id="resetForm">Clear form</button><button type="submit" class="primary-button">Submit application →</button></div>
+            </div>
+            <aside class="form-aside"><div class="panel tip-panel"><span class="tip-icon">✦</span><h3>Before you submit</h3><ul><li>Check the spelling of your name.</li><li>Use a valid email and phone number.</li><li>Enter your actual academic percentage.</li><li>Keep document files under 1 MB.</li></ul></div><div class="secure-note"><span>◈</span><div><b>Demo environment</b><p>Information is stored locally in this browser only.</p></div></div></aside>
+          </form>
+        </section>
+
+        <section class="view" id="view-merit">
+          <div class="page-heading"><div><p class="eyebrow">ADMISSION 2026–27</p><h1>Merit list</h1><p class="muted">Applicants ranked by their Class 12 percentage.</p></div><button class="outline-button" id="meritCsv">↓ Download merit list</button></div>
+          <article class="panel merit-panel"><div class="merit-banner"><div><span class="eyebrow light">SELECTION OVERVIEW</span><h2>Merit & eligibility</h2><p>Rankings are calculated from the percentage entered in each application.</p></div><div class="merit-trophy">✧</div></div><div class="table-wrap"><table><thead><tr><th>RANK</th><th>STUDENT</th><th>APPLICATION ID</th><th>COURSE</th><th>12TH %</th><th>STATUS</th></tr></thead><tbody id="meritTable"></tbody></table></div><p class="form-note pad-note">This is an illustrative merit list. Final admission decisions should follow the institution's official eligibility and reservation rules.</p></article>
+        </section>
+
+        <section class="view" id="view-reports">
+          <div class="page-heading"><div><p class="eyebrow">INSIGHTS</p><h1>Reports</h1><p class="muted">A quick summary of the admission cycle.</p></div><button class="outline-button" id="reportCsv">↓ Export report data</button></div>
+          <div class="stats-grid report-stats"><article class="stat-card"><div class="stat-top"><span>Approval rate</span><span class="stat-icon green">↗</span></div><strong id="approvalRate">0%</strong><small class="stat-foot">Of all applications</small></article><article class="stat-card"><div class="stat-top"><span>Average score</span><span class="stat-icon purple">％</span></div><strong id="averageScore">0%</strong><small class="stat-foot">Class 12 percentage</small></article><article class="stat-card"><div class="stat-top"><span>Courses offered</span><span class="stat-icon amber">⌘</span></div><strong id="courseCount">0</strong><small class="stat-foot">With applications</small></article><article class="stat-card"><div class="stat-top"><span>Documents attached</span><span class="stat-icon blue">▧</span></div><strong id="documentCount">0</strong><small class="stat-foot">Files noted in applications</small></article></div>
+          <div class="dashboard-grid"><article class="panel report-panel"><div class="panel-heading"><div><h2>Status distribution</h2><p class="muted">Application decisions</p></div></div><div id="statusReport" class="status-report"></div></article><article class="panel report-panel"><div class="panel-heading"><div><h2>Course demand</h2><p class="muted">Applications by course</p></div></div><div id="courseReport" class="course-breakdown"></div></article></div>
+        </section>
+      </div>
+      <footer class="footer"><span>© 2026 UniApply Portal</span><span>Built with HTML · CSS · JavaScript</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><p class="eyebrow">APPLICATION DETAILS</p><h2 id="modalTitle">Application</h2></div><button class="icon-button" id="closeModal" aria-label="Close">×</button></div><div id="modalContent"></div></div></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <div class="login-overlay" id="loginOverlay"><div class="login-card"><div class="brand login-brand"><span class="brand-mark">U</span><span><b>UniApply</b><small>ADMISSION PORTAL</small></span></div><p class="eyebrow">WELCOME BACK</p><h1>Sign in to your workspace</h1><p class="muted">Choose a demo role to explore the portal.</p><form id="loginForm"><label>Email address<input type="email" id="loginEmail" value="admin@uniapply.demo" required /></label><label>Password<input type="password" id="loginPassword" value="admin123" required /></label><label>Demo role<select id="loginRole"><option value="admin">Administrator</option><option value="student">Student</option></select></label><button class="primary-button full-button" type="submit">Sign in →</button></form><div class="login-hint">Demo access: any email + password, choose a role.</div></div></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
